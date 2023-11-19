@@ -14,13 +14,21 @@ function ManageExpense({ route, navigation }) {
     });
   }, [navigation, expenseIdIsExisting]);
 
-  function deleteExpense() {}
+  function deleteExpense() {
+    navigation.goBack();
+  }
+  function cancelHandler() {
+    navigation.goBack();
+  }
+  function updateHandler() {
+    navigation.goBack();
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.btnsContainer}>
-        <Button style={styles.button} mode="flat">Cancel</Button>
-        <Button style={styles.button}>{expenseIdIsExisting ? 'Update' : 'Add'}</Button>
+        <Button style={styles.button} onPress={cancelHandler} mode="flat">Cancel</Button>
+        <Button style={styles.button} onPress={updateHandler}>{expenseIdIsExisting ? 'Update' : 'Add'}</Button>
       </View>
 
       <View style={styles.deleteExpense}>
