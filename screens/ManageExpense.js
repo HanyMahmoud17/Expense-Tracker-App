@@ -1,11 +1,14 @@
-import { useLayoutEffect } from "react";
+import { useContext, useLayoutEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import IconButton from "../components/UI/IconButton";
 import { GlobalStyles } from "../constants/styles";
 import Button from "../components/UI/Button";
 import ExpenseForm from "../components/manageExpense/ExpenseForm";
+import { ExpenseContext } from "../store/expenseContext";
 
 function ManageExpense({ route, navigation }) {
+  const expenseCTX= useContext(ExpenseContext);
+
   const expenseId = route.params?.expenseId;
   const expenseIdIsExisting = !!expenseId;
 
@@ -16,6 +19,7 @@ function ManageExpense({ route, navigation }) {
   }, [navigation, expenseIdIsExisting]);
 
   function deleteExpense() {
+    expenseCTX.deleteExpense(expenseId)
     navigation.goBack();
   }
   function cancelHandler() {
@@ -25,17 +29,18 @@ function ManageExpense({ route, navigation }) {
     navigation.goBack();
   }
 
+  function confirmHandler(expenseData) {
+    if (expenseIdIsExisting) {
+      expenseCTX.updateExpense(expenseId, expenseData);
+    } else {
+      expenseCTX.addExpense(expenseData);
+    }
+    navigation.goBack();
+  }
+
   return (
     <View style={styles.container}>
-      <ExpenseForm />
-      <View style={styles.btnsContainer}>
-        <Button style={styles.button} onPress={cancelHandler} mode="flat">
-          Cancel
-        </Button>
-        <Button style={styles.button} onPress={updateHandler}>
-          {expenseIdIsExisting ? "Update" : "Add"}
-        </Button>
-      </View>
+      <ExpenseForm onSubmit={confirmHandler} submitButtonLabel={expenseIdIsExisting ? "Update" : "Add"} cancelHandler={cancelHandler} />
       <View style={styles.deleteExpense}>
         {expenseIdIsExisting && (
           <IconButton
@@ -65,14 +70,5 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingTop: 8,
   },
-  button: {
-    marginHorizontal: 8,
-    minWidth: 120,
-  },
-  btnsContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    // gap:8
-  },
+
 });
