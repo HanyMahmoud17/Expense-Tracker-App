@@ -27,6 +27,7 @@ function ManageExpense({ route, navigation }) {
 
   return (
     <View style={styles.container}>
+      <ExpenseForm />
       <View style={styles.btnsContainer}>
         <Button style={styles.button} onPress={cancelHandler} mode="flat">
           Cancel
@@ -35,7 +36,6 @@ function ManageExpense({ route, navigation }) {
           {expenseIdIsExisting ? "Update" : "Add"}
         </Button>
       </View>
-      <ExpenseForm />
       <View style={styles.deleteExpense}>
         {expenseIdIsExisting && (
           <IconButton
