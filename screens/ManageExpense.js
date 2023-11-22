@@ -37,6 +37,11 @@ function ManageExpense({ route, navigation }) {
   function confirmHandler(expenseData) {
     if (expenseIdIsExisting) {
       expenseCTX.updateExpense(expenseId, expenseData);
+      // expenseCTX.updateExpense(expenseId,{
+      //   description:'tessssst',
+      //   amount:29.99,
+      //   date:new Date('2023-11-1')
+      // });
     } else {
       expenseCTX.addExpense(expenseData);
     }

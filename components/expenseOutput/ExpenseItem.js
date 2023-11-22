@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 
 function ExpenseItem({ id,description, amount, date }) {
   const navigation = useNavigation();
+  
   function pressHandler(){
     navigation.navigate('manageExpense',{
       expenseId:id
@@ -13,7 +14,7 @@ function ExpenseItem({ id,description, amount, date }) {
   }
 
   return (
-    <Pressable onPress={pressHandler} style={({pressed})=> pressed && styles.pressed}>
+    <Pressable onPress={pressHandler} style={({pressed}) => pressed && styles.pressed}>
       <View style={styles.expenseItem}>
         <View>
           <Text style={[styles.textBase, styles.description]}>
