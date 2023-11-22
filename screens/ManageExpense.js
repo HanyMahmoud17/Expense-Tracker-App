@@ -7,10 +7,15 @@ import ExpenseForm from "../components/manageExpense/ExpenseForm";
 import { ExpenseContext } from "../store/expenseContext";
 
 function ManageExpense({ route, navigation }) {
-  const expenseCTX= useContext(ExpenseContext);
+  const expenseCTX = useContext(ExpenseContext);
 
   const expenseId = route.params?.expenseId;
   const expenseIdIsExisting = !!expenseId;
+
+  // get the specific expense
+  const selectedExpense = expenseCTX.expenses.find(
+    (expense) => expense.id === expenseId
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -19,7 +24,7 @@ function ManageExpense({ route, navigation }) {
   }, [navigation, expenseIdIsExisting]);
 
   function deleteExpense() {
-    expenseCTX.deleteExpense(expenseId)
+    expenseCTX.deleteExpense(expenseId);
     navigation.goBack();
   }
   function cancelHandler() {
@@ -40,7 +45,13 @@ function ManageExpense({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <ExpenseForm onSubmit={confirmHandler} submitButtonLabel={expenseIdIsExisting ? "Update" : "Add"} cancelHandler={cancelHandler} />
+      <ExpenseForm
+        onSubmit={confirmHandler}
+        submitButtonLabel={expenseIdIsExisting ? "Update" : "Add"}
+        cancelHandler={cancelHandler}
+        // here i pasa the selected expense
+        defaultValues={selectedExpense}
+      />
       <View style={styles.deleteExpense}>
         {expenseIdIsExisting && (
           <IconButton
@@ -70,5 +81,4 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingTop: 8,
   },
-
 });

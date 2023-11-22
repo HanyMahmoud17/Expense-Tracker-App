@@ -1,17 +1,18 @@
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Alert } from "react-native";
 
 import Input from "./Input";
 import { GlobalStyles } from "../../constants/styles";
 import { useState } from "react";
 import Button from "../UI/Button";
+import { getFormatedDate } from "../../util/date";
 
-function ExpenseForm({submitButtonLabel,cancelHandler,onSubmit}) {
+function ExpenseForm({submitButtonLabel,cancelHandler,onSubmit,defaultValues}) {
   // hint : i make the initial value to be an empty string because in the input field return string
   // but i am here need to make a new thing
   const [inputValues, setInputValues] = useState({
-    amount: "",
-    date: "",
-    description: "",
+    amount: defaultValues ? defaultValues.amount.toString() : '',
+    date: defaultValues ? getFormatedDate(defaultValues.date) : '',
+    description: defaultValues ? defaultValues.description : '',
   });
   function inputChangedHandler(inpuIdentifier, enterdValue) {
     setInputValues((currentInput) => {
@@ -29,9 +30,16 @@ function ExpenseForm({submitButtonLabel,cancelHandler,onSubmit}) {
       date:new Date(inputValues.date),
       description: inputValues.description
     }
+    // make validation
+    const amountIsValid=!isNaN(expenseData.amount) && expenseData.amount > 0;
+    const dateIsValid=expenseData.date.toString() !== 'invalid Date';
+    const descriptionIsValid=expenseData.description.trim().length > 0;
 
+    if(!amountIsValid || !dateIsValid || !descriptionIsValid){
+      Alert.alert('Invalid input','Please enter a valid inputs')
+      return;
+    }
     // send to the screen of manage expense
-
     onSubmit(expenseData)
   }
   return (
