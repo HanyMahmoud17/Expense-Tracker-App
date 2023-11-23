@@ -5,6 +5,7 @@ import { GlobalStyles } from "../constants/styles";
 import Button from "../components/UI/Button";
 import ExpenseForm from "../components/manageExpense/ExpenseForm";
 import { ExpenseContext } from "../store/expenseContext";
+import { storeExpense } from "../util/http";
 
 function ManageExpense({ route, navigation }) {
   const expenseCTX = useContext(ExpenseContext);
@@ -43,6 +44,8 @@ function ManageExpense({ route, navigation }) {
       //   date:new Date('2023-11-1')
       // });
     } else {
+      // add the data to firebase 
+      storeExpense(expenseData)
       expenseCTX.addExpense(expenseData);
     }
     navigation.goBack();
