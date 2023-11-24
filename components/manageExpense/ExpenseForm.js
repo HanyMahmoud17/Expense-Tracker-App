@@ -1,10 +1,10 @@
 import { View, StyleSheet, Text, Alert } from "react-native";
 
 import Input from "./Input";
-import { GlobalStyles } from "../../constants/styles";
 import { useState } from "react";
 import Button from "../UI/Button";
 import { getFormatedDate } from "../../util/date";
+import { GlobalStyles } from "../../constants/styles";
 
 function ExpenseForm({
   submitButtonLabel,
@@ -48,17 +48,17 @@ function ExpenseForm({
     // make validation
     const amountIsValid =
       !isNaN(expenseData.amount) && expenseData.amount > 0;
-    const dateIsValid = expenseData.date.toString() !== "Invalid Date";
+    const dateIsValid = expenseData.date.toString() !== 'Invalid Date';
     const descriptionIsValid = expenseData.description.trim().length > 0;
 
     if (!amountIsValid || !dateIsValid || !descriptionIsValid) {
       // Alert.alert('Invalid input','Please enter a valid inputs')
-      setInputs((currentInput) => {
+      setInputs((curInputs) => {
         return {
-          amount: { value: currentInput.amount.value, isValid: amountIsValid },
-          date: { value: currentInput.date.value, isValid: dateIsValid },
+          amount: { value: curInputs.amount.value, isValid: amountIsValid },
+          date: { value: curInputs.date.value, isValid: dateIsValid },
           description: {
-            value: currentInput.description.value,
+            value: curInputs.description.value,
             isValid: descriptionIsValid,
           },
         };
@@ -95,7 +95,7 @@ function ExpenseForm({
           textInputConfig={{
             placeholder: "YYYY-MM-DD",
             maxLength: 10,
-            onChangeText: inputChangedHandler.bind(this, "date"),
+            onChangeText: inputChangedHandler.bind(this, 'date'),
             value: inputs.date.value,
           }}
           style={styles.inputStyle}

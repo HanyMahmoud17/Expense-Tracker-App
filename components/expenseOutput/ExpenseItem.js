@@ -13,6 +13,10 @@ function ExpenseItem({ id,description, amount, date }) {
     })
   }
 
+  // const formattedDate =
+  //   date instanceof Date ? getFormatedDate(date) : 'Invalid Date';
+  const formattedDate = date instanceof Date ? getFormatedDate(date) : 'Invalid Date';
+
   return (
     <Pressable onPress={pressHandler} style={({pressed}) => pressed && styles.pressed}>
       <View style={styles.expenseItem}>
@@ -20,7 +24,8 @@ function ExpenseItem({ id,description, amount, date }) {
           <Text style={[styles.textBase, styles.description]}>
             {description}
           </Text>
-          <Text style={styles.textBase}>{getFormatedDate(date)}</Text>
+          {/* <Text style={styles.textBase}>{getFormatedDate(date)}</Text> */}
+          <Text style={styles.textBase}>{formattedDate}</Text>
         </View>
         <View style={styles.amountContainer}>
           <Text style={styles.amount}>{amount.toFixed(2)}</Text>

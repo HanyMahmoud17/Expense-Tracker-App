@@ -26,16 +26,17 @@ function ExpenseOverview() {
         navigation.navigate('manageExpense')
       }}  />
     })}>
-      <BottomTab.Screen name="recentExpense" component={RecentExpenses} options={{
-        title:'Recent Expense',
-        tabBarLabel:'Recent',
-        tabBarIcon:({color,size})=> <Ionicons name="hourglass" color={color} size={size}/>
-      }}/>
       <BottomTab.Screen name="allExpense" component={AllExpenses} options={{
         title:'All Expense',
         tabBarLabel:'All Expense',
         tabBarIcon:({color,size})=> <Ionicons name="calendar" color={color} size={size}/>
       }}/>
+      <BottomTab.Screen name="recentExpense" component={RecentExpenses} options={{
+        title:'Recent Expense',
+        tabBarLabel:'Recent',
+        tabBarIcon:({color,size})=> <Ionicons name="hourglass" color={color} size={size}/>
+      }}/>
+      
     </BottomTab.Navigator>
   );
 }

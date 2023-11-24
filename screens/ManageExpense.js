@@ -1,13 +1,17 @@
-import { useContext, useLayoutEffect } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import IconButton from "../components/UI/IconButton";
 import { GlobalStyles } from "../constants/styles";
 import Button from "../components/UI/Button";
 import ExpenseForm from "../components/manageExpense/ExpenseForm";
 import { ExpenseContext } from "../store/expenseContext";
-import { storeExpense } from "../util/http";
+import { storeExpense, updateExpense, deleteOneExpense } from "../util/http";
+import LoadingOverlay from "../components/UI/LoadingOverlay";
+import ErrorOverlay from "../components/UI/ErrorOverlay";
 
 function ManageExpense({ route, navigation }) {
+  const [isSubmiting, setIsSubmitting] = useState(false);
+  const [isError, setIsError] = useState();
   const expenseCTX = useContext(ExpenseContext);
 
   const expenseId = route.params?.expenseId;
@@ -24,9 +28,17 @@ function ManageExpense({ route, navigation }) {
     });
   }, [navigation, expenseIdIsExisting]);
 
-  function deleteExpense() {
-    expenseCTX.deleteExpense(expenseId);
-    navigation.goBack();
+  async function deleteExpense() {
+    setIsSubmitting(true);
+    try {
+      //delete using firebase
+      await deleteOneExpense(expenseId);
+      expenseCTX.deleteExpense(expenseId);
+      navigation.goBack();
+    } catch (isError) {
+      setIsError("can't delete expense try again");
+      setIsSubmitting(false);
+    }
   }
   function cancelHandler() {
     navigation.goBack();
@@ -35,20 +47,35 @@ function ManageExpense({ route, navigation }) {
     navigation.goBack();
   }
 
-  function confirmHandler(expenseData) {
-    if (expenseIdIsExisting) {
-      expenseCTX.updateExpense(expenseId, expenseData);
-      // expenseCTX.updateExpense(expenseId,{
-      //   description:'tessssst',
-      //   amount:29.99,
-      //   date:new Date('2023-11-1')
-      // });
-    } else {
-      // add the data to firebase 
-      storeExpense(expenseData)
-      expenseCTX.addExpense(expenseData);
+  async function confirmHandler(expenseData) {
+    try {
+      if (expenseIdIsExisting) {
+        expenseCTX.updateExpense(expenseId, expenseData);
+        // delete using firebse
+        await updateExpense(expenseId, expenseData);
+        // expenseCTX.updateExpense(expenseId,{
+        //   description:'tessssst',
+        //   amount:29.99,
+        //   date:new Date('2023-11-1')
+        // });
+      } else {
+        // add the data to firebase
+        const id = await storeExpense(expenseData);
+        expenseCTX.addExpense({ ...expenseData, id: id });
+      }
+      navigation.goBack();
+    } catch (isError) {
+      setIsError("can't update or add a new expense");
+      setIsSubmitting(false);
     }
-    navigation.goBack();
+  }
+
+  if (isError && !isSubmiting) {
+    return <ErrorOverlay message={isError} />;
+  }
+
+  if (isSubmiting) {
+    return <LoadingOverlay />;
   }
 
   return (
